@@ -1,17 +1,25 @@
 import mongoose from 'mongoose';
-import mongodb from 'mongodb';
 
 const doadorSchema = new mongoose.Schema({
-    nome: String,
-    logradouro: String,
-    numero: Number,
-    complemento: String,
-    cidade: String,
-    UF: String,
-    CPF: String,
+    nomeCompleto: String,
+    sexo: String,
+    cpf: String,
+    dataNascimento: Date,
+    celular: String,
     email: String,
-    senha: String,
-    valor_doacao: Number,
+    endereco: {
+        cep: String,
+        rua: String,
+        numero: Number,
+        bairro: String,
+        cidade: String,
+        estado: String,
+    },
+    senhaHash: String,
+    tipo: String,
+    ativo: Boolean,
+    criadoEm: Date,
+    atualizadoEm: Date,
 });
 
 export const doadorModel = mongoose.model('doador', doadorSchema);

@@ -1,0 +1,100 @@
+ROTAS E ESTRUTURA DE DADOS DO BACKEND - GIVEHOPE
+
+Com base na documentacao do projeto, o backend deve atender tres areas principais:
+area publica, area do doador e area administrativa. Como o projeto utiliza MongoDB,
+o ideal e pensar em colecoes em vez de tabelas, embora a estrutura abaixo tambem
+sirva como modelo logico de banco de dados.
+
+
+1. ROTAS DO BACKEND
+
+1.1 Area publica e autenticacao
+
+=====> *** rota OK *** <===== 
+POST /api/auth/cadastro - Cadastra um novo doador. Deve receber nome completo, CPF, sexo, data de nascimento, celular, e-mail, senha e confirmacao de senha. A senha deve ser salva como hash,
+nunca em texto puro.
+
+
+=====> *** rota OK *** <===== 
+POST /api/auth/login - Autentica usuario ou administrador usando e-mail e senha. Retorna os dados basicos do usuario e um token de acesso.
+
+
+
+POST /api/auth/esqueci-senha - Inicia o fluxo de recuperacao de senha, presente na tela de login.
+
+POST /api/auth/redefinir-senha - Finaliza a redefinicao de senha usando um token valido de recuperacao.
+
+1.2 Fluxo de doacao
+
+=====> *** rota OK *** <===== 
+POST /api/doacao - Cria uma doacao. Deve receber o valor escolhido e o usuario doador.
+
+1.3 Area do doador
+
+=====> *** rota OK *** <===== 
+GET /api/doador/minhas-doacoes - Lista o historico de doacoes do usuario logado, com data e valor.
+
+
+GET /api/doador/perfil - Consulta os dados do perfil do doador logado.
+
+PATCH /api/doador/perfil - Atualiza os dados do perfil do doador, incluindo nome, nascimento, endereco,
+telefone e demais dados cadastrais.
+
+
+1.4 Area administrativa
+
+GET /api/admin/dashboard - Retorna indicadores gerais, como total arrecadado.
+
+GET /api/admin/doacoes - Lista todas as doacoes. Retorna doador, e-mail, valor e data.
+
+GET /api/admin/usuarios - Lista e pesquisa usuarios cadastrados. Essa rota corresponde a tela "Gestao de Usuarios".
+
+DELETE /api/admin/usuarios/:id - Inativa um usuario cadastrado. Em geral, recomenda-se desativar em vez de apagar definitivamente, para preservar historico de doacoes.
+
+2. ESTRUTURA DAS COLECOES
+
+2.1 Colecao usuarios
+
+A colecao "usuarios" deve guardar doadores e administradores.
+
+usuarios {
+  _id,
+  nomeCompleto,
+  cpf,
+  sexo,
+  dataNascimento,
+  celular,
+  email,
+  senhaHash,
+  tipo: "doador" | "admin",
+  endereco: {
+    cep,
+    rua,
+    numero,
+    bairro,
+    cidade,
+    estado
+  },
+  ativo,
+  criadoEm,
+  atualizadoEm
+}
+
+
+2.2 Colecao doacoes
+
+A colecao "doacoes" deve registrar cada contribuicao feita no portal.
+
+doacoes {
+  _id,
+  usuarioId,
+  valor,
+  criadoEm
+}
+
+3. RESUMO
+
+O backend atual precisa evoluir de um simples cadastro e listagem de doacoes para
+uma API com autenticacao, usuarios com perfil, doacoes vinculadas ao usuario,
+pagamento PIX, historico do doador e painel administrativo com gestao de doacoes
+e usuarios.
