@@ -17,12 +17,12 @@ export async function incluirDoacao(req, res) {
 }
 
 export async function listarDocoesPorDoador(req, res) {
-    const dados = req.body;
+    const dados = req.params;
     let msg = '';
 
     try {
         const doacao = await doacaoModel
-            .find({ usuarioId: dados.usuarioId })
+            .find({ usuarioId: dados.id_doador })
             .exec();
 
         res.status(201).json(doacao);

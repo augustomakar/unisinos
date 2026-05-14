@@ -117,3 +117,29 @@ export async function autenticarUsuario(req, res) {
 
     res.status(299).json('ok');
 }
+
+export async function listarDoador(req, res) {
+    const idDoador = req.params.id_doador;
+    let msg = '';
+
+    try {
+        const doador = await doadorModel.findById(idDoador).exec();
+        res.status(200).json(doador);
+    } catch (error) {
+        msg = 'msg: Erro ao retornar dados do doador.' + error;
+        res.status(500).json(msg);
+    }
+}
+
+export async function listarUsuarios(req, res) {
+    // const idDoador = req.params.id_doador;
+    let msg = '';
+
+    try {
+        const usuarios = await doadorModel.find({}).exec();
+        res.status(200).json(usuarios);
+    } catch (error) {
+        msg = 'msg: Erro ao retornar dados dos usuários.' + error;
+        res.status(500).json(msg);
+    }
+}
