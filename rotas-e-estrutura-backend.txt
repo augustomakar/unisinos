@@ -25,10 +25,9 @@ POST /api/auth/redefinir-senha - Finaliza a redefinicao de senha usando um token
 
 
 
-GET /api/doador/perfil - Consulta os dados do perfil do doador logado.
 
-PATCH /api/doador/perfil - Atualiza os dados do perfil do doador, incluindo nome, nascimento, endereco,
-telefone e demais dados cadastrais.
+
+
 
 
 1.4 Area administrativa
@@ -38,7 +37,7 @@ GET /api/admin/dashboard - Retorna indicadores gerais, como total arrecadado.
 
 
 
-DELETE /api/admin/usuarios/:id - Inativa um usuario cadastrado. Em geral, recomenda-se desativar em vez de apagar definitivamente, para preservar historico de doacoes.
+
 
 2. ESTRUTURA DAS COLECOES
 
@@ -109,3 +108,10 @@ GET /api/doador/minhas-doacoes/:id_doador - Lista o historico de doacoes do usua
 GET /api/admin/doacoes - Lista todas as doacoes. Retorna doador, e-mail, valor e data.
 
 GET /api/admin/usuarios - Lista e pesquisa usuarios cadastrados. Essa rota corresponde a tela "Gestao de Usuarios".
+
+GET /api/doador/perfil - Consulta os dados do perfil do doador logado.
+
+DELETE /api/admin/usuarios/:id_doador - Inativa um usuario cadastrado. Em geral, recomenda-se desativar em vez de apagar definitivamente, para preservar historico de doacoes.
+
+PATCH /api/doador/perfil - Atualiza os dados do perfil do doador, incluindo nome, nascimento, endereco,
+telefone e demais dados cadastrais.

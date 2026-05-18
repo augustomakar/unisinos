@@ -55,17 +55,17 @@ export async function listarTodasDoacoes(req, res) {
     // console.log(req);
 }
 
-export async function excluirDoador(req, res) {
-    const email = req.body.email;
-    const password = req.body.senha;
+// export async function excluirDoador(req, res) {
+//     const email = req.body.email;
+//     const password = req.body.senha;
 
-    const deletado = await doadorModel.findOneAndDelete({
-        email: email,
-        senha: password,
-    });
-    res.status(200).send(deletado);
-    // console.log(req);
-}
+//     const deletado = await doadorModel.findOneAndDelete({
+//         email: email,
+//         senha: password,
+//     });
+//     res.status(200).send(deletado);
+// console.log(req);
+// }
 
 async function encryptPassword(password) {
     const saltRounds = 10;
@@ -143,3 +143,38 @@ export async function listarUsuarios(req, res) {
         res.status(500).json(msg);
     }
 }
+
+export async function excluirDoador(req, res) {
+    const idDoador = req.params.id_doador;
+    let msg = '';
+
+    try {
+        const doador = await doadorModel
+            .findByIdAndUpdate(idDoador, { ativo: false })
+            .exec();
+        doador.save();
+        res.status(200).json(doador);
+    } catch (error) {
+        msg = 'msg: Erro ao excluir dados do doador.' + error;
+        res.status(500).json(msg);
+    }
+}
+
+export async function alterarDoador(req, res) {
+    const idDoador = req.params.id_doador;
+    const dados = req.body;
+    let msg = '';
+
+    try {
+        const doador = await doadorModel
+            .findByIdAndUpdate(idDoador, dados)
+            .exec();
+        doador.save();
+        res.status(200).json(doador);
+    } catch (error) {
+        msg = 'msg: Erro ao alterar dados do doador.' + error;
+        res.status(500).json(msg);
+    }
+}
+
+// res.send('ALTERAR DOADOR');
