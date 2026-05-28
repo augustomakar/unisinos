@@ -5,67 +5,59 @@ import jwt from 'jsonwebtoken';
 
 dotenv.config();
 
+// *** rota REVISADA em 27/05/2026 as 20:18 *** //
 export async function incluirDoador(req, res) {
     const dados = req.body;
-    const password = dados.senhaHash;
-    const { email } = dados;
-    let msg = '';
+    const { email, password1, password2 } = req.body;
 
-    // verifica se email e senha foram informados
-    if (!password || !email) {
-        msg = 'msg: Email ou Password não informados.';
-        res.status(400).json(msg);
+    // testa se todos os campos estão preenchidos
+    if (!email || !password1 || !password2) {
+        return res
+            .status(400)
+            .json({ msg: 'Todos os campos precisam ser preenchidos !' });
+    }
+
+    // testa se os passwords são iguais
+    if (password1 !== password2) {
+        return res.status(400).json({
+            msg: 'A senha e sua confirmação precisam ser iguais !',
+        });
     }
 
     // verifica se doador já está cadastrado
     try {
         const usuarioBD = await doadorModel.findOne({ email }).exec();
         if (usuarioBD) {
-            msg = 'msg: Usuário já cadastrado.';
-            res.status(400).json(msg);
+            return res.status(400).json({ msg: 'Usuário já cadastrado.' });
         }
     } catch (error) {
-        msg = 'msg: Erro ao consultar se o usuário já esta cadastrado.';
-        res.status(500).json(msg);
+        return res.status(500).json({
+            msg: 'Erro ao consultar se o usuário já esta cadastrado.',
+            error,
+        });
     }
 
     // criptografa senha
     try {
-        const passwordEncrypted = await encryptPassword(password);
+        const passwordEncrypted = await encryptPassword(password1);
         dados.senhaHash = passwordEncrypted;
     } catch (error) {
-        msg = 'msg: Erro ao criptografar a senha do doador.';
-        res.status(500).json(msg);
+        return res
+            .status(500)
+            .json({ msg: 'Erro ao criptografar a senha do doador.', error });
     }
 
     // grava no Banco de Dados
     try {
         const doador = new doadorModel(dados);
         await doador.save();
-        res.status(201).json(doador);
+        return res.status(201).json(doador);
     } catch (error) {
-        msg = 'msg: Erro ao gravar o doador no BD.';
-        res.status(500).json(msg);
+        return res
+            .status(500)
+            .json({ msg: 'Erro ao gravar o doador no BD.', error });
     }
 }
-
-export async function listarTodasDoacoes(req, res) {
-    const doador = await doadorModel.find({});
-    res.status(200).json(doador);
-    // console.log(req);
-}
-
-// export async function excluirDoador(req, res) {
-//     const email = req.body.email;
-//     const password = req.body.senha;
-
-//     const deletado = await doadorModel.findOneAndDelete({
-//         email: email,
-//         senha: password,
-//     });
-//     res.status(200).send(deletado);
-// console.log(req);
-// }
 
 async function encryptPassword(password) {
     const saltRounds = 10;
@@ -73,6 +65,7 @@ async function encryptPassword(password) {
     return hash;
 }
 
+// *** rota REVISADA em 27/05/2026 as 20:03 *** //
 export async function autenticarUsuario(req, res) {
     const dados = req.body;
     const password = dados.senhaHash;
@@ -82,7 +75,7 @@ export async function autenticarUsuario(req, res) {
     // verifica se email e senha foram informados
     if (!password || !email) {
         msg = 'msg: Email ou Password não informados.';
-        res.status(400).json(msg);
+        return res.status(400).json({ msg });
     }
 
     // verifica se o email está cadastrado
@@ -90,14 +83,14 @@ export async function autenticarUsuario(req, res) {
         const doadorBD = await doadorModel.findOne({ email }).exec();
         if (!doadorBD) {
             msg = 'msg: Erro ao validar credenciais.';
-            res.status(400).json(msg);
+            return res.status(400).json(msg);
         }
 
         const passwordHashed = doadorBD.senhaHash;
         const passwordMatch = await bcrypt.compare(password, passwordHashed);
         if (!passwordMatch) {
             msg = 'msg: Erro ao validar credenciais.';
-            res.status(400).json(msg);
+            return res.status(400).json(msg);
         }
 
         const payload = {
@@ -109,13 +102,11 @@ export async function autenticarUsuario(req, res) {
         const token = await jwt.sign(payload, process.env.JWT_SECRET_KEY, {
             expiresIn: '1h',
         });
-        res.status(297).json({ payload, token });
+        res.status(200).json({ payload, token });
     } catch (error) {
         msg = 'msg: Erro ao consultar se o usuário já esta cadastrado.';
         res.status(500).json(msg);
     }
-
-    res.status(299).json('ok');
 }
 
 export async function listarDoador(req, res) {
@@ -131,19 +122,20 @@ export async function listarDoador(req, res) {
     }
 }
 
+// *** rota REVISADA em 27/05/2026 as 21:05 *** //
 export async function listarUsuarios(req, res) {
-    // const idDoador = req.params.id_doador;
     let msg = '';
 
     try {
         const usuarios = await doadorModel.find({}).exec();
-        res.status(200).json(usuarios);
+        return res.status(200).json(usuarios);
     } catch (error) {
         msg = 'msg: Erro ao retornar dados dos usuários.' + error;
-        res.status(500).json(msg);
+        return res.status(500).json(msg);
     }
 }
 
+// *** rota REVISADA em 27/05/2026 as 21:09 *** //
 export async function excluirDoador(req, res) {
     const idDoador = req.params.id_doador;
     let msg = '';
@@ -153,10 +145,10 @@ export async function excluirDoador(req, res) {
             .findByIdAndUpdate(idDoador, { ativo: false })
             .exec();
         doador.save();
-        res.status(200).json(doador);
+        return res.status(200).json(doador);
     } catch (error) {
         msg = 'msg: Erro ao excluir dados do doador.' + error;
-        res.status(500).json(msg);
+        return res.status(500).json(msg);
     }
 }
 
@@ -177,4 +169,62 @@ export async function alterarDoador(req, res) {
     }
 }
 
-// res.send('ALTERAR DOADOR');
+// *** rota REVISADA em 27/05/2026 as 17:38 *** //
+export async function redefinirSenha(req, res) {
+    const { email, oldPassword, newPassword1, newPassword2 } = req.body;
+
+    // testa se todos os campos estão preenchidos
+    if (!email || !oldPassword || !newPassword1 || !newPassword2) {
+        return res
+            .status(400)
+            .json({ msg: 'Todos os campos precisam ser preenchidos !' });
+    }
+
+    // testa se os passwords são iguais
+    if (newPassword1 !== newPassword2) {
+        return res.status(400).json({
+            msg: 'A nova senha e sua confirmação precisam ser iguais !',
+        });
+    }
+
+    // testa se a senha antiga e a nova são iguais
+    if (oldPassword === newPassword1) {
+        return res.status(400).json({
+            msg: 'A nova senha e anterior são iguais !',
+        });
+    }
+
+    try {
+        // testa se o email anterior existe
+        const doador = await doadorModel.findOne({ email }).exec();
+        if (!doador) {
+            return res
+                .status(400)
+                .json({ msg: 'Usuário não cadastrado ou senha incorreta !' });
+        }
+
+        // Verifica se a senha anterior está correta
+        const passwordMatch = await bcrypt.compare(
+            oldPassword,
+            doador.senhaHash,
+        );
+        if (!passwordMatch) {
+            return res
+                .status(400)
+                .json({ msg: 'Usuário não cadastrado ou senha incorreta !' });
+        }
+
+        // POR FIM criptografa nova senha e grava no BD
+        const senhaHash = await bcrypt.hash(
+            newPassword1,
+            Number(process.env.SALT_ROUNDS),
+        );
+        const data = await doadorModel.findOneAndUpdate(
+            { email },
+            { senhaHash },
+        );
+        return res.status(200).json({ msg: 'Senha alterada com sucesso !' });
+    } catch (error) {
+        return res.status(500).json({ msg: 'Erro do servidor !', error });
+    }
+}

@@ -1,0 +1,50 @@
+=========================================================
+    R O T A S     R E V I S A D A S 
+=========================================================
+
+1 ==> sem necessidade do middleware
+
+POST /api/auth/redefinir-senha - Finaliza a redefinicao de senha usando um token valido de recuperacao.
+// *** rota REVISADA em 27/05/2026 as 17:38 *** //
+
+POST /api/auth/login - Autentica usuario ou administrador usando e-mail e senha. Retorna os dados basicos do usuario e um token de acesso.
+// *** rota REVISADA em 27/05/2026 as 20:03 *** //
+
+POST /api/auth/cadastro - Cadastra um novo doador. Deve receber nome completo, CPF, sexo, data de nascimento, celular, e-mail, senha e confirmacao de senha. A senha deve ser salva como hash,
+nunca em texto puro.
+// *** rota REVISADA em 27/05/2026 as 20:18 *** //
+
+
+
+
+===> falta colocar middleware
+
+GET /api/admin/doacoes - Lista todas as doacoes. Retorna doador, e-mail, valor e data.
+// *** rota REVISADA em 27/05/2026 as 21:00 *** //
+
+GET /api/admin/usuarios - Lista e pesquisa usuarios cadastrados. Essa rota corresponde a tela "Gestao de Usuarios".
+// *** rota REVISADA em 27/05/2026 as 21:05 *** //
+
+DELETE /api/admin/usuarios/:id_doador - Inativa um usuario cadastrado. Em geral, recomenda-se desativar em vez de apagar definitivamente, para preservar historico de doacoes.
+// *** rota REVISADA em 27/05/2026 as 21:09 *** //
+
+POST /api/doacao - Cria uma doacao. Deve receber o valor escolhido e o usuario doador.
+// *** rota REVISADA em 27/05/2026 as 21:29 *** //
+
+
+
+
+
+
+
+
+
+
+
+
+
+2 ==> somente com middleware
+
+
+
+3 ==> administrativas

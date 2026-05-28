@@ -2,25 +2,33 @@ import { Router } from 'express';
 import {
     incluirDoador,
     autenticarUsuario,
-    listarTodasDoacoes,
     excluirDoador,
     listarDoador,
     listarUsuarios,
     alterarDoador,
+    redefinirSenha,
 } from './doador.controller.js';
-import { incluirDoacao, listarDocoesPorDoador } from './doacao.controller.js';
+import {
+    incluirDoacao,
+    listarDocoesPorDoador,
+    listarTodasDoacoes,
+} from './doacao.controller.js';
 
 const rotas = Router();
 
-// REVISADAS
-rotas.post('/auth/cadastro', incluirDoador);
-rotas.post('/auth/login', autenticarUsuario);
-rotas.post('/doacao', incluirDoacao);
 rotas.get('/doador/minhas-doacoes/:id_doador', listarDocoesPorDoador);
+rotas.get('/doador/perfil/:id_doador', listarDoador);
+rotas.patch('/doador/perfil/:id_doador', alterarDoador);
+
+// revisadas
+rotas.post('/auth/redefinir-senha', redefinirSenha);
+rotas.post('/auth/login', autenticarUsuario);
+rotas.post('/auth/cadastro', incluirDoador);
+
+// falta midleware
 rotas.get('/admin/doacoes', listarTodasDoacoes);
 rotas.get('/admin/usuarios', listarUsuarios);
-rotas.get('/doador/perfil/:id_doador', listarDoador);
 rotas.delete('/admin/usuarios/:id_doador', excluirDoador);
-rotas.patch('/doador/perfil/:id_doador', alterarDoador);
+rotas.post('/doacao', incluirDoacao);
 
 export default rotas;
