@@ -25,6 +25,7 @@ export async function incluirDoacao(req, res) {
     }
 }
 
+// *** rota REVISADA em 28/05/2026 as 18:37 *** //
 export async function listarDocoesPorDoador(req, res) {
     const dados = req.params;
     let msg = '';
@@ -34,17 +35,24 @@ export async function listarDocoesPorDoador(req, res) {
             .find({ usuarioId: dados.id_doador })
             .exec();
 
-        res.status(201).json(doacao);
+        return res.status(201).json(doacao);
     } catch (error) {
         msg = 'msg: Erro ao gravar a doação no BD.' + error;
-        res.status(500).json(msg);
+        return res.status(500).json(msg);
     }
 }
 
 // *** rota REVISADA em 27/05/2026 as 21:00 *** //
 export async function listarTodasDoacoes(req, res) {
+    const admin = req.payload.role;
+
+    if (admin !== 'admin') {
+        return res
+            .status(403)
+            .json({ msg: 'Rota exclusiva para administradores' });
+    }
+
     try {
-        console.log('listartodasdoacoes');
         const doacao = await doacaoModel.find({}).exec();
         return res.status(200).json(doacao);
     } catch (error) {

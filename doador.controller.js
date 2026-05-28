@@ -109,22 +109,31 @@ export async function autenticarUsuario(req, res) {
     }
 }
 
+// *** rota REVISADA em 28/05/2026 as 18:39 *** //
 export async function listarDoador(req, res) {
     const idDoador = req.params.id_doador;
     let msg = '';
 
     try {
         const doador = await doadorModel.findById(idDoador).exec();
-        res.status(200).json(doador);
+        return res.status(200).json(doador);
     } catch (error) {
         msg = 'msg: Erro ao retornar dados do doador.' + error;
-        res.status(500).json(msg);
+        return res.status(500).json(msg);
     }
 }
 
 // *** rota REVISADA em 27/05/2026 as 21:05 *** //
 export async function listarUsuarios(req, res) {
     let msg = '';
+
+    const admin = req.payload.role;
+
+    if (admin !== 'admin') {
+        return res
+            .status(403)
+            .json({ msg: 'Rota exclusiva para administradores' });
+    }
 
     try {
         const usuarios = await doadorModel.find({}).exec();
@@ -139,6 +148,13 @@ export async function listarUsuarios(req, res) {
 export async function excluirDoador(req, res) {
     const idDoador = req.params.id_doador;
     let msg = '';
+    const admin = req.payload.role;
+
+    if (admin !== 'admin') {
+        return res
+            .status(403)
+            .json({ msg: 'Rota exclusiva para administradores' });
+    }
 
     try {
         const doador = await doadorModel
@@ -152,6 +168,7 @@ export async function excluirDoador(req, res) {
     }
 }
 
+// *** rota REVISADA em 28/05/2026 as 18:41 *** //
 export async function alterarDoador(req, res) {
     const idDoador = req.params.id_doador;
     const dados = req.body;
@@ -162,10 +179,10 @@ export async function alterarDoador(req, res) {
             .findByIdAndUpdate(idDoador, dados)
             .exec();
         doador.save();
-        res.status(200).json(doador);
+        return res.status(200).json(doador);
     } catch (error) {
         msg = 'msg: Erro ao alterar dados do doador.' + error;
-        res.status(500).json(msg);
+        return res.status(500).json(msg);
     }
 }
 

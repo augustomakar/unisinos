@@ -10,9 +10,6 @@ sirva como modelo logico de banco de dados.
 
 1.1 Area publica e autenticacao
 
-
-
-
 POST /api/auth/esqueci-senha - Inicia o fluxo de recuperacao de senha, presente na tela de login.
 
 
@@ -92,26 +89,10 @@ e usuarios.
 
 
 
-=========================================================
-R O T A S     F I N A L I Z A D A S
-=========================================================
 
 
 
 
 
 
-
-GET /api/doador/minhas-doacoes/:id_doador - Lista o historico de doacoes do usuario logado, com data e valor.
-
-
-
-
-
-GET /api/doador/perfil - Consulta os dados do perfil do doador logado.
-
-
-
-PATCH /api/doador/perfil/:id_doador - Atualiza os dados do perfil do doador, incluindo nome, nascimento, endereco,
-telefone e demais dados cadastrais.
 

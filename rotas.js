@@ -1,4 +1,6 @@
 import { Router } from 'express';
+import { middlewareValidarJWT } from './auth.js';
+
 import {
     incluirDoador,
     autenticarUsuario,
@@ -16,19 +18,22 @@ import {
 
 const rotas = Router();
 
-rotas.get('/doador/minhas-doacoes/:id_doador', listarDocoesPorDoador);
-rotas.get('/doador/perfil/:id_doador', listarDoador);
-rotas.patch('/doador/perfil/:id_doador', alterarDoador);
-
-// revisadas
+// SEM MIDDLEWARE
 rotas.post('/auth/redefinir-senha', redefinirSenha);
 rotas.post('/auth/login', autenticarUsuario);
 rotas.post('/auth/cadastro', incluirDoador);
-
-// falta midleware
-rotas.get('/admin/doacoes', listarTodasDoacoes);
-rotas.get('/admin/usuarios', listarUsuarios);
-rotas.delete('/admin/usuarios/:id_doador', excluirDoador);
-rotas.post('/doacao', incluirDoacao);
+// COM O MIDDLEWARE E ADMIN
+rotas.get('/admin/doacoes', middlewareValidarJWT, listarTodasDoacoes);
+rotas.get('/admin/usuarios', middlewareValidarJWT, listarUsuarios);
+rotas.delete('/admin/usuarios/:id_doador', middlewareValidarJWT, excluirDoador);
+// SOMENTE O MIDDLEWARE
+rotas.post('/doacao', middlewareValidarJWT, incluirDoacao);
+rotas.get(
+    '/doador/minhas-doacoes/:id_doador',
+    middlewareValidarJWT,
+    listarDocoesPorDoador,
+);
+rotas.get('/doador/perfil/:id_doador', middlewareValidarJWT, listarDoador);
+rotas.patch('/doador/perfil/:id_doador', middlewareValidarJWT, alterarDoador);
 
 export default rotas;

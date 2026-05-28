@@ -16,8 +16,7 @@ nunca em texto puro.
 
 
 
-
-===> falta colocar middleware
+===> COM MIDDLEWARE E ADMIN
 
 GET /api/admin/doacoes - Lista todas as doacoes. Retorna doador, e-mail, valor e data.
 // *** rota REVISADA em 27/05/2026 as 21:00 *** //
@@ -28,10 +27,21 @@ GET /api/admin/usuarios - Lista e pesquisa usuarios cadastrados. Essa rota corre
 DELETE /api/admin/usuarios/:id_doador - Inativa um usuario cadastrado. Em geral, recomenda-se desativar em vez de apagar definitivamente, para preservar historico de doacoes.
 // *** rota REVISADA em 27/05/2026 as 21:09 *** //
 
+
+
+===> SOMENTE COM MIDDLEWARE
+
 POST /api/doacao - Cria uma doacao. Deve receber o valor escolhido e o usuario doador.
 // *** rota REVISADA em 27/05/2026 as 21:29 *** //
 
+GET /api/doador/minhas-doacoes/:id_doador - Lista o historico de doacoes do usuario logado, com data e valor.
+// *** rota REVISADA em 28/05/2026 as 18:37 *** //
 
+GET /api/doador/perfil - Consulta os dados do perfil do doador logado.
+// *** rota REVISADA em 28/05/2026 as 18:39 *** //
+
+PATCH /api/doador/perfil/:id_doador - Atualiza os dados do perfil do doador, incluindo nome, nascimento, endereco, telefone e demais dados cadastrais.
+// *** rota REVISADA em 28/05/2026 as 18:41 *** //
 
 
 
