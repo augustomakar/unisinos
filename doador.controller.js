@@ -86,6 +86,11 @@ export async function autenticarUsuario(req, res) {
             return res.status(400).json(msg);
         }
 
+        if (!doadorBD.ativo) {
+            msg = 'msg: Usuário inativo.';
+            return res.status(400).json(msg);
+        }
+
         const passwordHashed = doadorBD.senhaHash;
         const passwordMatch = await bcrypt.compare(password, passwordHashed);
         if (!passwordMatch) {
@@ -96,6 +101,7 @@ export async function autenticarUsuario(req, res) {
         const payload = {
             id: doadorBD.id,
             username: doadorBD.nomeCompleto,
+            email: doadorBD.email,
             role: doadorBD.tipo,
         };
 
