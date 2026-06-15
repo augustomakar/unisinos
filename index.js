@@ -3,6 +3,8 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import rotas from './rotas.js';
+import dns from 'node:dns/promises'; // ou const dns = require("node:dns/promises");
+dns.setServers(['1.1.1.1', '8.8.8.8']); // Cloudflare e Google DNS
 
 const app = express();
 app.use(express.json());
