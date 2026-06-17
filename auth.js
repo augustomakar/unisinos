@@ -5,7 +5,8 @@ import express, { json } from 'express';
 configDotenv();
 
 export const middlewareValidarJWT = (req, res, next) => {
-    const jwtToken = req.headers['authorization'];
+    // const jwtToken = req.headers['authorization'];
+    const jwtToken = req.headers['authorization']?.split(' ')[1];
     const jwtSecretKey = process.env.JWT_SECRET_KEY;
 
     jwt.verify(jwtToken, jwtSecretKey, (err, payload) => {
